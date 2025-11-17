@@ -1,9 +1,9 @@
-<?php
+//<?php
 // Module9/project_report.php
-if (file_exists(__DIR__ . '/../shared/header.php')) include_once __DIR__ . '/../shared/header.php';
+if (file_exists(_DIR_ . '/../shared/header.php')) include_once _DIR_ . '/../shared/header.php';
 else { echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"><div class="container my-4">'; }
 
-include_once __DIR__ . '/project_functions.php';
+include_once _DIR_ . '/project_functions.php';
 global $conn;
 
 $total = 0; $completed = 0; $overbudget = 0;
@@ -29,6 +29,6 @@ if ($conn) {
 </div>
 
 <?php
-if (file_exists(__DIR__ . '/../shared/footer.php')) include_once __DIR__ . '/../shared/footer.php';
+if (file_exists(_DIR_ . '/../shared/footer.php')) include_once _DIR_ . '/../shared/footer.php';
 else echo '</div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>';
 ?>
