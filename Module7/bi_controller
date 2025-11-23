@@ -1,0 +1,89 @@
+<?php
+
+require_once __DIR__ . '/config.php';
+
+header('Content-Type: application/json');
+
+$all = json_decode(file_get_contents(__DIR__ . '/get_all_data.php'), true);
+
+if (!$all || !isset($all['modules'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Failed to fetch module data', 'raw' => $all], JSON_PRETTY_PRINT);
+    exit;
+}
+
+$modules = $all['modules'];
+$summary = [];
+$errors = [];
+
+foreach ($modules as $modName => $modRes) {
+    if (isset($modRes['error']) && $modRes['error'] === true) {
+        $errors[$modName] = $modRes;
+        $summary[$modName] = ['status' => 'error', 'details' => $modRes];
+        continue;
+    }
+
+  
+    $data = $modRes['data'] ?? ($modRes['data_raw'] ?? null);
+
+    if (is_array($data)) {
+        
+        $recordCount = count($data);
+        $summary[$modName] = ['status' => 'ok', 'records' => $recordCount];
+        
+        $sampleNumericSums = [];
+        foreach ($data as $row) {
+            if (!is_array($row) && !is_object($row)) continue;
+            $rowArr = (array)$row;
+            foreach ($rowArr as $k => $v) {
+                if (is_numeric($v)) {
+                    if (!isset($sampleNumericSums[$k])) $sampleNumericSums[$k] = 0;
+                    $sampleNumericSums[$k] += $v;
+                }
+            }
+        }
+        if (!empty($sampleNumericSums)) {
+           
+            arsort($sampleNumericSums);
+            $summary[$modName]['numeric_sums'] = array_slice($sampleNumericSums, 0, 3, true);
+        }
+    } else {
+        
+        $summary[$modName] = ['status' => 'ok', 'records' => 'unknown', 'raw_preview' => substr((string)$data, 0, 400)];
+    }
+}
+
+$report = [
+    'status' => empty($errors) ? 'success' : 'partial',
+    'generated_at' => date('Y-m-d H:i:s'),
+    'module_summary' => $summary,
+    'errors' => $errors,
+    'raw_fetch_meta' => ['fetched_at' => $all['fetched_at'] ?? null]
+];
+
+
+$inserted = false;
+if (!empty($DB_CONFIG['host']) && !empty($DB_CONFIG['dbname'])) {
+   
+    $mysqli = @new mysqli($DB_CONFIG['host'], $DB_CONFIG['username'], $DB_CONFIG['password'], $DB_CONFIG['dbname']);
+    if ($mysqli && !$mysqli->connect_errno) {
+        $stmt = $mysqli->prepare("INSERT INTO bi_summary (summary_json, generated_at) VALUES (?, ?)");
+        if ($stmt) {
+            $jsonPayload = json_encode($report);
+            $ts = $report['generated_at'];
+            $stmt->bind_param('ss', $jsonPayload, $ts);
+            $ok = $stmt->execute();
+            if ($ok) $inserted = true;
+            $stmt->close();
+        }
+        $mysqli->close();
+    }
+}
+
+$out = [
+    'report' => $report,
+    'db_inserted' => $inserted
+];
+
+echo json_encode($out, JSON_PRETTY_PRINT);
+
+echo json_encode($out, JSON_PRETTY_PRINT);
