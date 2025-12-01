@@ -4,7 +4,7 @@ return [
     "db_host" => "localhost",
     "db_user" => "root",
     "db_pass" => "",
-    "db_name" => "module7_bi",
+    "db_name" => "coffee",
 
     // API endpoints (change to your real module endpoints)
     "endpoints" => [
