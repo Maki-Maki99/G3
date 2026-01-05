@@ -1,3 +1,11 @@
+-- File: module7_schema.sql
+-- Description: Database schema for Module 7 (Business Intelligence)
+
+-- Create database for Module 7 (Business Intelligence)
+CREATE DATABASE IF NOT EXISTS module7_bi;
+USE module7_bi;
+
+-- Table to store BI reports
 CREATE TABLE IF NOT EXISTS bi_reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
     report_name VARCHAR(100) NOT NULL,

@@ -32,11 +32,6 @@ function is_active($names) {
 
   <!-- Navigation -->
   <nav class="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
-    <!-- Dashboard -->
-    <a href="<?php echo BASE_URL; ?>dashboard.php"
-       class="flex items-center gap-2 px-3 py-2 rounded-md transition <?php echo is_active('dashboard.php') ? 'bg-red-600 text-white' : 'hover:bg-gray-200'; ?>">
-       <span>Dashboard</span>
-    </a>
 
     <!-- Inventory Dropdown -->
     <details class="group" <?php if (is_active(['index.php','locations.php','transactions.php','alerts.php'])) echo "open"; ?>>
@@ -106,6 +101,20 @@ function is_active($names) {
         <a href="<?php echo BASE_URL; ?>Module6/ecommerce.php"
            class="block px-2 py-1 rounded <?php echo $is_ecommerce ? 'bg-red-600 text-white' : 'hover:bg-gray-200'; ?>">
           <span>Online Store</span>
+        </a>
+      </div>
+    </details>
+
+    <!-- Business Intelligence (Module 7) -->
+    <details class="group" <?php if (strpos($_SERVER['REQUEST_URI'],'Module7') !== false) echo "open"; ?>>
+      <summary class="flex items-center justify-between px-3 py-2 rounded-md hover:bg-gray-200">
+        <span>Business Intelligence</span>
+        <i class="fas fa-chevron-down transform transition-transform group-open:rotate-180"></i>
+      </summary>
+      <div class="ml-5 mt-1 space-y-1">
+        <a href="<?php echo BASE_URL; ?>Module7/index.php"
+          class="block px-2 py-1 rounded <?php echo (strpos($_SERVER['REQUEST_URI'],'Module7/index.php') !== false) ? 'bg-red-600 text-white' : 'hover:bg-gray-200'; ?>">
+          <span>Reports</span>
         </a>
       </div>
     </details>

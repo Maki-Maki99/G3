@@ -1,8 +1,4 @@
 <?php
-// ecommerce.php – UPDATED to use shared sidebar.php cleanly
-// Front-end for product listing, product view, cart, checkout
-// with customer + payment handling.
-
 require '../db.php';
 session_start();
 

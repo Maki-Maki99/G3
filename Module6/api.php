@@ -1,6 +1,4 @@
 <?php
-// api.php - UPDATED: more robust stock deduction that uses product_locations totals
-// Works with ecommerce.php cart system
 
 require '../db.php';
 header('Content-Type: application/json');
@@ -25,9 +23,6 @@ if ($action === 'deduct_stock') {
     $raw = file_get_contents('php://input');
     $body = json_decode($raw, true);
 
-    // Accept several payload shapes for backwards compatibility:
-    // 1) Plain array of items:  [ {"sku":"X","qty":1}, ... ]
-    // 2) Wrapped object: { "cart": [ ... ] } or { "items": [ ... ] }
     $items = null;
 
     if (is_array($body) && isset($body['cart']) && is_array($body['cart'])) {
